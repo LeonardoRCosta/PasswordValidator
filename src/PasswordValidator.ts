@@ -10,10 +10,20 @@ export class PasswordValidator {
 
   private SPECIAL_CARACTERS: string[];
 
+  private PASSWORD_MIN_LENGTH: number;
+
+  private PASSWORD_MAX_LENGTH: number;
+
   constructor() {
     this.resultObject = { result: true, errors: [] };
+
     this.password = '';
+
     this.SPECIAL_CARACTERS = ['!', '@', '$', '%', '&', '*', '~', '^', '?', '#'];
+
+    this.PASSWORD_MIN_LENGTH = 16;
+
+    this.PASSWORD_MAX_LENGTH = 32;
   }
 
   toASCII() {
@@ -24,7 +34,8 @@ export class PasswordValidator {
 
   validateLength() {
     const isLengthValid =
-      this.password.length >= 16 && this.password.length <= 32;
+      this.password.length >= this.PASSWORD_MIN_LENGTH &&
+      this.password.length <= this.PASSWORD_MAX_LENGTH;
 
     if (!isLengthValid) {
       this.resultObject.errors.push(
@@ -40,6 +51,7 @@ export class PasswordValidator {
 
     const specialCharacters = characters.reduce((acc, character) => {
       if (this.SPECIAL_CARACTERS.includes(character)) acc++;
+
       return acc;
     }, 0);
 
@@ -56,18 +68,26 @@ export class PasswordValidator {
     const charCodes = this.toASCII();
 
     let upper = charCodes.reduce((acc, charCode) => {
-      if (charCode > 64 && charCode < 91) acc++;
+      const isUpperCase = charCode > 64 && charCode < 91;
+
+      if (isUpperCase) acc++;
 
       return acc;
     }, 0);
 
     let lower = charCodes.reduce((acc, charCode) => {
-      if (charCode > 96 && charCode < 123) acc++;
+      const isLowerCase = charCode > 96 && charCode < 123;
+
+      if (isLowerCase) acc++;
 
       return acc;
     }, 0);
 
-    if (upper === 0 || lower === 0) {
+    const hasUpperCase = upper !== 0;
+
+    const hasLowerCase = lower !== 0;
+
+    if (!hasUpperCase || !hasLowerCase) {
       this.resultObject.errors.push(
         'Password must have lower and upper characters!'
       );
@@ -77,10 +97,12 @@ export class PasswordValidator {
   }
 
   validateIfIsSequence() {
-    for (let i = 0; i < this.password.length; i++) {
+    const asciiCodes = this.toASCII();
+
+    asciiCodes.forEach((code, idx) => {
       const isSequence =
-        this.password.charCodeAt(i) === this.password.charCodeAt(i + 1) - 1 &&
-        this.password.charCodeAt(i + 1) === this.password.charCodeAt(i + 2) - 1;
+        code === asciiCodes[idx + 1] - 1 &&
+        asciiCodes[idx + 1] === asciiCodes[idx + 2] - 1;
 
       if (isSequence) {
         this.resultObject.errors.push(
@@ -89,7 +111,7 @@ export class PasswordValidator {
 
         this.resultObject.result = false;
       }
-    }
+    });
   }
 
   execute(password: string) {
@@ -109,4 +131,4 @@ export class PasswordValidator {
 
 const validator = new PasswordValidator();
 
-console.log(validator.execute('125fdcvfdbsFsafd$af!safdasas'));
+console.log(validator.execute('13fdcvfdbFVssafd$af!safdasas'));
