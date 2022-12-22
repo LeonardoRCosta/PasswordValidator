@@ -29,9 +29,27 @@ export class PasswordValidator {
     }
   }
 
+  validateSpecialCharacters() {
+    const characters = this.password.split('');
+
+    const specialCharacters = characters.reduce((acc, character) => {
+      if (this.SPECIAL_CARACTERS.includes(character)) acc++;
+      return acc;
+    }, 0);
+
+    if (specialCharacters < 2) {
+      this.resultObject.errors.push(
+        'Password must have at least 2 special characters!'
+      );
+
+      this.resultObject.result = false;
+    }
+  }
+
   execute(password: string) {
     this.password = password;
     this.validateLength();
+    this.validateSpecialCharacters();
 
     return this.resultObject;
   }
