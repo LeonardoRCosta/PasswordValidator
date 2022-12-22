@@ -16,6 +16,12 @@ export class PasswordValidator {
     this.SPECIAL_CARACTERS = ['!', '@', '$', '%', '&', '*', '~', '^', '?', '#'];
   }
 
+  toASCII() {
+    const charCodes = this.password.split('').map((char) => char.charCodeAt(0));
+
+    return charCodes;
+  }
+
   validateLength() {
     const isLengthValid =
       this.password.length >= 16 && this.password.length <= 32;
@@ -47,13 +53,16 @@ export class PasswordValidator {
   }
 
   validateUpperAndLower() {
-    let upper = this.password.split('').reduce((acc, char) => {
-      if (char.charCodeAt(0) > 64 && char.charCodeAt(0) < 91) acc++;
+    const charCodes = this.toASCII();
+
+    let upper = charCodes.reduce((acc, charCode) => {
+      if (charCode > 64 && charCode < 91) acc++;
 
       return acc;
     }, 0);
-    let lower = this.password.split('').reduce((acc, char) => {
-      if (char.charCodeAt(0) > 96 && char.charCodeAt(0) < 123) acc++;
+
+    let lower = charCodes.reduce((acc, charCode) => {
+      if (charCode > 96 && charCode < 123) acc++;
 
       return acc;
     }, 0);
