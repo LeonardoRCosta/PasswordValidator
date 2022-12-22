@@ -46,10 +46,32 @@ export class PasswordValidator {
     }
   }
 
+  validateUpperAndLower() {
+    let upper = this.password.split('').reduce((acc, char) => {
+      if (char.charCodeAt(0) > 64 && char.charCodeAt(0) < 91) acc++;
+
+      return acc;
+    }, 0);
+    let lower = this.password.split('').reduce((acc, char) => {
+      if (char.charCodeAt(0) > 96 && char.charCodeAt(0) < 123) acc++;
+
+      return acc;
+    }, 0);
+
+    if (upper === 0 || lower === 0) {
+      this.resultObject.errors.push(
+        'Password must have lower and upper characters!'
+      );
+
+      this.resultObject.result = false;
+    }
+  }
+
   execute(password: string) {
     this.password = password;
     this.validateLength();
     this.validateSpecialCharacters();
+    this.validateUpperAndLower();
 
     return this.resultObject;
   }
