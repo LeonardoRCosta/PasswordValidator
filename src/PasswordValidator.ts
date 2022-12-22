@@ -67,11 +67,32 @@ export class PasswordValidator {
     }
   }
 
+  validateIfIsSequence() {
+    for (let i = 0; i < this.password.length; i++) {
+      const isSequence =
+        this.password.charCodeAt(i) === this.password.charCodeAt(i + 1) - 1 &&
+        this.password.charCodeAt(i + 1) === this.password.charCodeAt(i + 2) - 1;
+
+      if (isSequence) {
+        this.resultObject.errors.push(
+          'Password must not have sequence characters!'
+        );
+
+        this.resultObject.result = false;
+      }
+    }
+  }
+
   execute(password: string) {
     this.password = password;
+
     this.validateLength();
+
     this.validateSpecialCharacters();
+
     this.validateUpperAndLower();
+
+    this.validateIfIsSequence();
 
     return this.resultObject;
   }
