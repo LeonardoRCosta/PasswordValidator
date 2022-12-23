@@ -19,7 +19,36 @@ export class PasswordValidator {
 
     this.passwordCharacters = [];
 
-    this.SPECIAL_CARACTERS = ['!', '@', '$', '%', '&', '*', '~', '^', '?', '#'];
+    this.SPECIAL_CARACTERS = [
+      '!',
+      '@',
+      '$',
+      '%',
+      '&',
+      '*',
+      '~',
+      '^',
+      '?',
+      '#',
+      '/',
+      '"',
+      ';',
+      "'",
+      '`',
+      '-',
+      '_',
+      '<',
+      '>',
+      'º',
+      '°',
+      '£',
+      '¢',
+      '=',
+      '§',
+      '\\',
+      'ª',
+      '´',
+    ];
 
     this.PASSWORD_MIN_LENGTH = 16;
 
